@@ -4,4 +4,3 @@ pandas
 rapidfuzz
 easyocr
 Pillow
-streamlit_cropper

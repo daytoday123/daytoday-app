@@ -6,7 +6,6 @@ import easyocr
 from collections import defaultdict
 from PIL import Image
 import io
-from streamlit_cropper import st_cropper
 import socket
 
 # === OPENAI SETUP ===
@@ -141,16 +140,15 @@ if uploaded_file:
         st.subheader("🔎 Top 20 Brand-Like Matches")
         st.dataframe(pd.DataFrame(brand_matches))
 
-    st.markdown("### 📸 Image Search with Cropping")
+    st.markdown("### 📸 Image Search (No Cropping)")
     image_files = st.file_uploader("Upload up to 2 product photos", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
     if image_files:
         combined_text = []
         for img in image_files:
             st.image(img, caption="Uploaded Image", use_column_width=True)
-            st.write("✂️ Adjust crop area below")
-            cropped_img = st_cropper(Image.open(img), box_color='#FF0000', aspect_ratio=None, return_type='image', realtime_update=False)
+            img_pil = Image.open(img)
             buf = io.BytesIO()
-            cropped_img.save(buf, format="PNG")
+            img_pil.save(buf, format="PNG")
             result = reader.readtext(buf.getvalue())
             extracted_text = ' '.join([line[1] for line in result])
             combined_text.append(extracted_text)
